@@ -12,18 +12,18 @@ const App = () => {
 
   const Header = ({ course }) => <h1>{course}</h1>;
 
+  const Part = () => (
+    <p>
+      {part1} {exercises1}
+    </p>
+  );
+
   const Content = () => {
     return (
       <>
-        <p>
-          {part1} {exercises1}
-        </p>
-        <p>
-          {part2} {exercises2}
-        </p>
-        <p>
-          {part3} {exercises3}
-        </p>
+        <Part />
+        <Part />
+        <Part />
       </>
     );
   };
