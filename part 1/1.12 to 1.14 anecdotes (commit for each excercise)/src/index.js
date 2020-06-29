@@ -2,19 +2,22 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
 const App = (props) => {
+  const initialPoints = [];
+  props.anecdotes.map(() => initialPoints.push(0));
+
   const [selected, setSelected] = useState(0);
-  const [points, setPoints] = useState([]);
+  const [points, setPoints] = useState(initialPoints);
 
   const handleClick = () => {
     let copy = [...points];
-    copy[selected] ? copy[selected]++ : (copy[selected] = 1);
+    copy[selected]++;
     setPoints(copy);
   };
 
   return (
     <>
       <div>{props.anecdotes[selected]}</div>
-      <p>has {points[selected] || 0} votes</p>
+      <p>has {points[selected]} votes</p>
       <button onClick={handleClick}>Vote</button>
       <button
         onClick={() =>
@@ -23,6 +26,12 @@ const App = (props) => {
       >
         Next Anecdote
       </button>
+
+      <div>
+        <h4>Anecdotes with the most votes</h4>
+        <div>{props.anecdotes[Math.max(...points)]}</div>
+        <p>has {Math.max(...points)} votes</p>
+      </div>
     </>
   );
 };
