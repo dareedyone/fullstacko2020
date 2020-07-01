@@ -4,7 +4,7 @@ const Course = ({ course }) => (
   <div>
     <Header course={course.name} />
     <Content parts={course.parts} />
-    {/* <Total parts={course.parts} /> */}
+    <Total parts={course.parts} />
   </div>
 );
 const Header = ({ course }) => <h1>{course}</h1>;
@@ -25,11 +25,13 @@ const Content = ({ parts }) => {
   );
 };
 
-// const Total = ({ parts: [part1, part2, part3] }) => (
-//   <p>
-//     Number of exercises {part1.exercises + part2.exercises + part3.exercises}
-//   </p>
-// );
+const Total = ({ parts }) => (
+  <p>
+    <strong>
+      Total of exercises {parts.reduce((acc, val) => acc + val.exercises, 0)}
+    </strong>
+  </p>
+);
 
 const App = () => {
   const course = {
