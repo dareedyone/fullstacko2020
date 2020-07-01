@@ -6,10 +6,13 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const found = persons.find(({ name }) => name === newName);
+    if (found) {
+      return alert(`${newName} is already added to phonebook`);
+    }
     const newPerson = { name: newName };
     setPersons(persons.concat(newPerson));
     setNewName("");
-    console.log(persons);
   };
 
   return (
@@ -30,8 +33,6 @@ const App = () => {
           <p key={name}>{name}</p>
         ))}
       </div>
-
-      <div>debug: {newName}</div>
     </div>
   );
 };
