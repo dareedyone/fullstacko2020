@@ -3,8 +3,8 @@ import React from "react";
 const Persons = ({ peopleToShow }) => {
   return (
     <div>
-      {peopleToShow.map(({ name, number }) => (
-        <p key={name}>
+      {peopleToShow.map(({ name, number, id }) => (
+        <p key={id}>
           {name} {number}
         </p>
       ))}
