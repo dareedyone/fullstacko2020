@@ -26,6 +26,11 @@ function App() {
     }
   };
 
+  const handleShow = (country) => {
+    setCountry([country]);
+    setfilterResult([]);
+  };
+
   return (
     <>
       <div>
@@ -34,7 +39,14 @@ function App() {
         </div>
         <div>
           {filterResult.map((country, i) => (
-            <p key={i}>{country.name}</p>
+            <p key={i}>
+              {country.name}{" "}
+              {country.name === "Too many searches, specify another filter" ? (
+                ""
+              ) : (
+                <button onClick={() => handleShow(country)}>show</button>
+              )}
+            </p>
           ))}
 
           {country.length === 1 && (
