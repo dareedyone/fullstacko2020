@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import { getAll, create, destroy } from "./services/persons";
+import { getAll, create, destroy, replace } from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -22,14 +22,30 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const found = persons.find(({ name }) => name === newName);
-    if (found) {
-      return alert(`${newName} is already added to phonebook`);
-    }
     const newPerson = {
       name: newName,
       number: newNumber,
     };
+    const found = persons.find(({ name }) => name === newName);
+    if (found) {
+      // return alert(`${newName} is already added to phonebook`);
+      let confirm = window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one ?`
+      );
+      return (
+        confirm &&
+        replace(found.id, newPerson).then((res) => {
+          setPeopleToShow(
+            peopleToShow.filter((person) => person.id !== found.id).concat(res)
+          );
+          setPersons(
+            persons.filter((person) => person.id !== found.id).concat(res)
+          );
+          setNewName("");
+          setNewNumber("");
+        })
+      );
+    }
 
     create(newPerson).then((res) => {
       setPeopleToShow(peopleToShow.concat(res));
