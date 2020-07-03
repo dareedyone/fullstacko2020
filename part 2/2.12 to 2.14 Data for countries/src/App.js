@@ -16,7 +16,9 @@ function App() {
     const match = countries.filter((country) => re.test(country.name));
     if (match.length === 1) {
       setfilterResult([]);
-      setCountry(match);
+      getWeather(match[0].capital).then((res) =>
+        setCountry([{ ...match[0], weather: res }])
+      );
     } else if (match.length > 10) {
       setfilterResult([{ name: "Too many searches, specify another filter" }]);
       setCountry([]);
@@ -24,6 +26,15 @@ function App() {
       setfilterResult(match);
       setCountry([]);
     }
+  };
+
+  const getWeather = (query) => {
+    let api_key = process.env.REACT_APP_API_KEY;
+    return axios
+      .get(
+        `http://api.weatherstack.com/current?access_key=${api_key}&query=${query}`
+      )
+      .then((res) => res.data);
   };
 
   const handleShow = (country) => {
@@ -66,6 +77,21 @@ function App() {
                 src={country[0].flag}
                 alt="flag"
               />
+
+              <h3>Weather in {country[0].capital}</h3>
+              <p>
+                <strong>Temperature:</strong>{" "}
+                {country[0].weather.current.temperature} Celcius
+              </p>
+              <img
+                style={{ width: 60, height: 70 }}
+                src={country[0].weather.current.weather_icons}
+                alt="weather icon"
+              />
+              <p>
+                <strong>Wind:</strong> {country[0].weather.current.wind_speed}{" "}
+                SSW
+              </p>
             </>
           )}
         </div>
