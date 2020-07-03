@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import { getAll, create } from "./services/persons";
+import { getAll, create, destroy } from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -31,10 +31,21 @@ const App = () => {
       number: newNumber,
     };
 
-    create(newPerson).then((res) => setPeopleToShow(persons.concat(res)));
+    create(newPerson).then((res) => {
+      setPeopleToShow(peopleToShow.concat(res));
+      setPersons(persons.concat(res));
+    });
 
     setNewName("");
     setNewNumber("");
+  };
+  const handleDelete = (id, name) => {
+    const extract = (arr) => arr.filter((person) => person.id !== id);
+    window.confirm(`Delete ${name} ?`) &&
+      destroy(id).then(() => {
+        setPeopleToShow(extract(peopleToShow));
+        setPersons(extract(persons));
+      });
   };
 
   const doFiltering = (e) => {
@@ -58,7 +69,7 @@ const App = () => {
         newNumber={newNumber}
       />
       <h3>Numbers</h3>
-      <Persons peopleToShow={peopleToShow} />
+      <Persons peopleToShow={peopleToShow} handleDelete={handleDelete} />
     </div>
   );
 };
