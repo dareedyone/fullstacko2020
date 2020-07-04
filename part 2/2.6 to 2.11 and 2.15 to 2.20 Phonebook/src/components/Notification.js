@@ -1,8 +1,8 @@
 import React from "react";
 
-const Notification = ({ message }) => {
-  if (message) {
-    return <div className="notif">{message}</div>;
+const Notification = ({ message: { text, type } }) => {
+  if (text) {
+    return <div className={type}>{text}</div>;
   }
 
   return null;

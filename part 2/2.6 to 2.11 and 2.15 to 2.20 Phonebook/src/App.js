@@ -36,20 +36,35 @@ const App = () => {
       );
       return (
         confirm &&
-        replace(found.id, newPerson).then((res) => {
-          setPeopleToShow(
-            peopleToShow.filter((person) => person.id !== found.id).concat(res)
-          );
-          setPersons(
-            persons.filter((person) => person.id !== found.id).concat(res)
-          );
-          setNewName("");
-          setNewNumber("");
-          setmessage("Number changed successfully !");
-          setTimeout(() => {
-            setmessage("");
-          }, 5000);
-        })
+        replace(found.id, newPerson)
+          .then((res) => {
+            setPeopleToShow(
+              peopleToShow
+                .filter((person) => person.id !== found.id)
+                .concat(res)
+            );
+            setPersons(
+              persons.filter((person) => person.id !== found.id).concat(res)
+            );
+            setNewName("");
+            setNewNumber("");
+            setmessage({
+              text: "Number changed successfully !",
+              type: "success",
+            });
+            setTimeout(() => {
+              setmessage("");
+            }, 5000);
+          })
+          .catch(() => {
+            setmessage({
+              text: `Information of ${found.name} have already been removed from the server !`,
+              type: "error",
+            });
+            setTimeout(() => {
+              setmessage("");
+            }, 5000);
+          })
       );
     }
 
@@ -58,7 +73,7 @@ const App = () => {
       setPersons(persons.concat(res));
       setNewName("");
       setNewNumber("");
-      setmessage("Number added successfully !");
+      setmessage({ text: "Number added successfully !", type: "success" });
       setTimeout(() => {
         setmessage("");
       }, 5000);
