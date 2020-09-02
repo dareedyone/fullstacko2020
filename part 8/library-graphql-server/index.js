@@ -135,18 +135,21 @@ const resolvers = {
 		bookCount: (root) => books.filter((b) => b.author === root.name).length,
 	},
 	Query: {
-		bookCount: () => books.length,
-		authorCount: () => authors.length,
+		bookCount: () => Book.collection.countDocuments(),
+		authorCount: () => Author.collection.countDocuments(),
 		allBooks: (root, args) => {
-			const genreFilteredOrAll = books.filter((b) =>
-				args.genre ? b.genres.includes(args.genre) : true
-			);
+			return args.genre
+				? Book.find({ genres: { $in: [args.genre] } })
+				: Book.find({});
+			// const genreFilteredOrAll = books.filter((b) =>
+			// 	args.genre ? b.genres.includes(args.genre) : true
+			// );
 
-			return !args.author
-				? genreFilteredOrAll
-				: genreFilteredOrAll.filter((b) => b.author === args.author);
+			// return !args.author
+			// 	? genreFilteredOrAll
+			// 	: genreFilteredOrAll.filter((b) => b.author === args.author);
 		},
-		allAuthors: () => authors,
+		allAuthors: () => Author.find({}),
 	},
 	Mutation: {
 		addBook: (root, args) => {
