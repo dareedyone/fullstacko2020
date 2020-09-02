@@ -132,38 +132,27 @@ const typeDefs = gql`
 
 const resolvers = {
 	Author: {
-		bookCount: (root) => books.filter((b) => b.author === root.name).length,
+		bookCount: async (root) => (await Book.find({ author: root._id })).length,
 	},
 	Query: {
 		bookCount: () => Book.collection.countDocuments(),
 		authorCount: () => Author.collection.countDocuments(),
 		allBooks: (root, args) => {
 			return args.genre
-				? Book.find({ genres: { $in: [args.genre] } })
-				: Book.find({});
-			// const genreFilteredOrAll = books.filter((b) =>
-			// 	args.genre ? b.genres.includes(args.genre) : true
-			// );
-
-			// return !args.author
-			// 	? genreFilteredOrAll
-			// 	: genreFilteredOrAll.filter((b) => b.author === args.author);
+				? Book.find({ genres: { $in: [args.genre] } }).populate("author")
+				: Book.find({}).populate("author");
 		},
 		allAuthors: () => Author.find({}),
 	},
 	Mutation: {
-		addBook: (root, args) => {
-			const book = new Book({ ...args });
-			return book.save();
-			// if (books.find((b) => b.title === args.title))
-			// 	throw new UserInputError("Book already exists", {
-			// 		invalidArgs: args.title,
-			// 	});
-			// const newBook = { ...args, id: uuid() };
-			// books.concat(newBook);
-			// if (!authors.find((a) => a.author === args.author))
-			// 	authors.concat({ name: args.author, id: uuid() });
-			// return newBook;
+		addBook: async (root, args) => {
+			let author = await Author.find({ name: args.name });
+			if (!author.length)
+				author = await new Author({ name: args.author }).save();
+			const book = new Book({ ...args, author: author._id });
+			return book.save().catch((error) => {
+				throw new UserInputError(error.message, { invalidArgs: args });
+			});
 		},
 
 		editAuthor: (root, args) => {
