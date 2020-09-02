@@ -1,5 +1,21 @@
 const { ApolloServer, gql, UserInputError } = require("apollo-server");
 const { v1: uuid } = require("uuid");
+const Book = require("./models/book");
+const Author = require("./models/author");
+const mongoose = require("mongoose");
+
+const MONGODB_URI =
+	"mongodb+srv://fullstack:test1234@cluster0.vdjnh.mongodb.net/library?retryWrites=true&w=majority";
+console.log("connecting to", MONGODB_URI);
+
+mongoose
+	.connect(MONGODB_URI, {
+		useNewUrlParser: true,
+		useCreateIndex: true,
+		useUnifiedTopology: true,
+	})
+	.then(() => console.log("connected to MongoDB"))
+	.catch((error) => console.log("error connection to MongoDB", error.message));
 let authors = [
 	{
 		name: "Robert Martin",
@@ -86,7 +102,7 @@ let books = [
 const typeDefs = gql`
 	type Book {
 		title: String!
-		author: String!
+		author: Author!
 		published: Int!
 		genres: [String!]!
 		id: ID!
@@ -134,15 +150,17 @@ const resolvers = {
 	},
 	Mutation: {
 		addBook: (root, args) => {
-			if (books.find((b) => b.title === args.title))
-				throw new UserInputError("Book already exists", {
-					invalidArgs: args.title,
-				});
-			const newBook = { ...args, id: uuid() };
-			books.concat(newBook);
-			if (!authors.find((a) => a.author === args.author))
-				authors.concat({ name: args.author, id: uuid() });
-			return newBook;
+			const book = new Book({ ...args });
+			return book.save();
+			// if (books.find((b) => b.title === args.title))
+			// 	throw new UserInputError("Book already exists", {
+			// 		invalidArgs: args.title,
+			// 	});
+			// const newBook = { ...args, id: uuid() };
+			// books.concat(newBook);
+			// if (!authors.find((a) => a.author === args.author))
+			// 	authors.concat({ name: args.author, id: uuid() });
+			// return newBook;
 		},
 
 		editAuthor: (root, args) => {
