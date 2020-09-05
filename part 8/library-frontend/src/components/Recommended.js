@@ -1,11 +1,16 @@
-import React from "react";
-import { useQuery } from "@apollo/client";
+import React, { useEffect, useState } from "react";
+import { useLazyQuery } from "@apollo/client";
 import { ALL_BOOKS } from "../queries";
 const Recommended = ({ favoriteGenre, show }) => {
-	const result = useQuery(ALL_BOOKS);
-	const books = result?.data?.allBooks.filter((book) =>
-		book.genres.includes(favoriteGenre)
-	);
+	const [allBooks, result] = useLazyQuery(ALL_BOOKS);
+	const [books, setBooks] = useState([]);
+
+	useEffect(() => {
+		allBooks({ variables: { genre: favoriteGenre } });
+		if (result.data) {
+			setBooks(result.data.allBooks);
+		}
+	}, [favoriteGenre, result.data]); //eslint-disable-line
 
 	if (!show) return null;
 	return (
