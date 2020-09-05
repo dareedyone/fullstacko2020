@@ -21,7 +21,7 @@ const Books = (props) => {
 	return (
 		<div>
 			<h2>books</h2>
-
+			<h3>Books in {genre} genre</h3>
 			<table>
 				<tbody>
 					<tr>
@@ -39,7 +39,7 @@ const Books = (props) => {
 				</tbody>
 			</table>
 			<ul style={{ listStyle: "none", display: "flex" }}>
-				{genres.map((g, i) => (
+				{genres?.map((g, i) => (
 					<li key={i}>
 						<button onClick={() => setGenre(g)}>{g}</button>
 					</li>

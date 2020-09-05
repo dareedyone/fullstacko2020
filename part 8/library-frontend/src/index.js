@@ -9,11 +9,11 @@ import {
 } from "@apollo/client";
 import { setContext } from "apollo-link-context";
 const authLink = setContext((_, { headers }) => {
-	const token = localStorage.getItem("library-user-token");
+	const userToken = JSON.parse(localStorage.getItem("library-user-token"));
 	return {
 		headers: {
 			...headers,
-			authorization: token ? `bearer ${token}` : null,
+			authorization: userToken ? `bearer ${userToken.value}` : null,
 		},
 	};
 });

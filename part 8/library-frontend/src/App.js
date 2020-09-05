@@ -4,19 +4,20 @@ import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
 import { useApolloClient } from "@apollo/client";
+import Recommended from "./components/Recommended";
 
 const App = () => {
 	const [page, setPage] = useState("authors");
-	const [token, setToken] = useState(null);
+	const [userToken, setUserToken] = useState(null);
 	const client = useApolloClient();
 
 	useEffect(() => {
 		localStorage.getItem("library-user-token") &&
-			setToken(localStorage.getItem("library-user-token"));
+			setUserToken(JSON.parse(localStorage.getItem("library-user-token")));
 	}, []);
 
 	const handleLogout = () => {
-		setToken(null);
+		setUserToken(null);
 		localStorage.clear();
 		client.resetStore();
 	};
@@ -25,8 +26,13 @@ const App = () => {
 			<div>
 				<button onClick={() => setPage("authors")}>authors</button>
 				<button onClick={() => setPage("books")}>books</button>
-				{token && <button onClick={() => setPage("add")}>add book</button>}
-				{token ? (
+				{userToken && (
+					<>
+						<button onClick={() => setPage("add")}>add book</button>
+						<button onClick={() => setPage("recommended")}>recommended</button>
+					</>
+				)}
+				{userToken ? (
 					<button onClick={handleLogout}>logout</button>
 				) : (
 					<button onClick={() => setPage("login")}>login</button>
@@ -38,7 +44,11 @@ const App = () => {
 			<Books show={page === "books"} />
 
 			<NewBook show={page === "add"} />
-			<LoginForm setToken={setToken} show={page === "login"} />
+			<LoginForm setUserToken={setUserToken} show={page === "login"} />
+			<Recommended
+				favoriteGenre={userToken?.user.favoriteGenre}
+				show={page === "recommended"}
+			/>
 		</div>
 	);
 };

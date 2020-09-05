@@ -113,8 +113,9 @@ const typeDefs = gql`
 		id: ID!
 	}
 
-	type Token {
+	type UserToken {
 		value: String!
+		user: User!
 	}
 
 	type Book {
@@ -146,7 +147,7 @@ const typeDefs = gql`
 		): Book
 		editAuthor(name: String!, setBornTo: Int!): Author
 		createUser(username: String!, favoriteGenre: String!): User
-		login(username: String!, password: String!): Token
+		login(username: String!, password: String!): UserToken
 	}
 `;
 
@@ -201,7 +202,7 @@ const resolvers = {
 				username: user.username,
 				id: user._id,
 			};
-			return { value: jwt.sign(userForToken, JWT_SECRET) };
+			return { value: jwt.sign(userForToken, JWT_SECRET), user };
 		},
 	},
 };
