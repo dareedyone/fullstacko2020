@@ -4,6 +4,7 @@ import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from "./../queries";
 const NewBook = (props) => {
 	const [createBook] = useMutation(CREATE_BOOK, {
 		refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+		onError: (error) => console.log(error),
 	});
 	const [title, setTitle] = useState("");
 	const [author, setAuhtor] = useState("");
