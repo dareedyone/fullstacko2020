@@ -3,6 +3,7 @@ const {
 	gql,
 	UserInputError,
 	AuthenticationError,
+	PubSub,
 } = require("apollo-server");
 const Book = require("./models/book");
 const Author = require("./models/author");
@@ -10,7 +11,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const User = require("./models/user");
 const JWT_SECRET = "I_AM_A_SECRET_KEY";
-
+const pubsub = new PubSub();
 const MONGODB_URI =
 	"mongodb+srv://fullstack:test1234@cluster0.vdjnh.mongodb.net/library?retryWrites=true&w=majority";
 console.log("connecting to", MONGODB_URI);
@@ -107,6 +108,9 @@ let books = [
 ];
 
 const typeDefs = gql`
+	type Subscription {
+		bookAdded: Book!
+	}
 	type User {
 		username: String!
 		favoriteGenre: String!
@@ -171,10 +175,13 @@ const resolvers = {
 			if (!currentUser) throw new AuthenticationError("not authenticated");
 			let author = await Author.findOne({ name: args.author });
 			if (!author) author = await new Author({ name: args.author }).save();
-			const book = new Book({ ...args, author: author._id });
-			return await book.save().catch((error) => {
-				throw new UserInputError(error.message, { invalidArgs: args });
-			});
+			const book = await new Book({ ...args, author: author._id })
+				.save()
+				.catch((error) => {
+					throw new UserInputError(error.message, { invalidArgs: args });
+				});
+			pubsub.publish("BOOK_ADDED", { bookAdded: book });
+			return book;
 		},
 
 		editAuthor: (root, args, { currentUser }) => {
@@ -203,6 +210,11 @@ const resolvers = {
 				id: user._id,
 			};
 			return { value: jwt.sign(userForToken, JWT_SECRET), user };
+		},
+	},
+	Subscription: {
+		bookAdded: {
+			subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"]),
 		},
 	},
 };
