@@ -3,13 +3,33 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient, useSubscription } from "@apollo/client";
 import Recommended from "./components/Recommended";
+import { BOOK_ADDED, ALL_BOOKS } from "./queries";
 
 const App = () => {
 	const [page, setPage] = useState("authors");
 	const [userToken, setUserToken] = useState(null);
 	const client = useApolloClient();
+
+	const updateCacheWith = (bookAdded) => {
+		const includeIn = (set, object) => set.map((b) => b.id).includes(object.id);
+		const dataInstore = client.readQuery({ query: ALL_BOOKS });
+		console.log(dataInstore);
+		if (!includeIn(dataInstore.allBooks, bookAdded)) {
+			client.writeQuery({
+				query: ALL_BOOKS,
+				data: { allBooks: dataInstore.allBooks.concat(bookAdded) },
+			});
+		}
+	};
+	useSubscription(BOOK_ADDED, {
+		onSubscriptionData: ({ subscriptionData }) => {
+			const { bookAdded } = subscriptionData.data;
+			window.alert(`a new book ${bookAdded.title} added`);
+			updateCacheWith(bookAdded);
+		},
+	});
 
 	useEffect(() => {
 		localStorage.getItem("library-user-token") &&

@@ -180,6 +180,7 @@ const resolvers = {
 				.catch((error) => {
 					throw new UserInputError(error.message, { invalidArgs: args });
 				});
+			await book.populate("author").execPopulate();
 			pubsub.publish("BOOK_ADDED", { bookAdded: book });
 			return book;
 		},
