@@ -156,9 +156,9 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
-	Author: {
-		bookCount: async (root) => (await Book.find({ author: root._id })).length,
-	},
+	// Author: {
+	// 	bookCount: async (root) => (await Book.find({ author: root._id })).length,
+	// },
 	Query: {
 		bookCount: () => Book.collection.countDocuments(),
 		authorCount: () => Author.collection.countDocuments(),
@@ -174,7 +174,12 @@ const resolvers = {
 		addBook: async (root, args, { currentUser }) => {
 			if (!currentUser) throw new AuthenticationError("not authenticated");
 			let author = await Author.findOne({ name: args.author });
-			if (!author) author = await new Author({ name: args.author }).save();
+			if (!author) {
+				author = await new Author({ name: args.author }).save();
+			} else {
+				author.bookCount = author.bookCount + 1;
+				author = await author.save();
+			}
 			const book = await new Book({ ...args, author: author._id })
 				.save()
 				.catch((error) => {

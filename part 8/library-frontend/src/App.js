@@ -26,8 +26,10 @@ const App = () => {
 	useSubscription(BOOK_ADDED, {
 		onSubscriptionData: ({ subscriptionData }) => {
 			const { bookAdded } = subscriptionData.data;
+			console.log(bookAdded);
 			window.alert(`a new book ${bookAdded.title} added`);
 			updateCacheWith(bookAdded);
+			//authors is not in sync because we need to write to allAuthors query too
 		},
 	});
 

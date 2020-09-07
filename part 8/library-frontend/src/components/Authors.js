@@ -20,6 +20,7 @@ const Authors = (props) => {
 		return null;
 	}
 	const authors = response?.data?.allAuthors || [];
+	console.log("authors here:", authors);
 
 	return (
 		<div>
