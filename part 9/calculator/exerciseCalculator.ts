@@ -41,4 +41,25 @@ const calculateExercises = (
 	};
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+const parseCalcArgs = (args: Array<string>): Array<number> => {
+	if (args.length < 2) throw new Error("Not enough arguments");
+	const neededValues = args.slice(2, args.length);
+
+	const daysArray: Array<number> = [];
+	neededValues.forEach((el) => {
+		if (!isNaN(Number(el))) {
+			daysArray.push(Number(el));
+		} else {
+			throw new Error("Provided values were not number");
+		}
+	});
+
+	return daysArray;
+};
+
+try {
+	const [target, ...hours] = parseCalcArgs(process.argv);
+	console.log(calculateExercises(hours, target));
+} catch (exp) {
+	console.log(exp.message);
+}
