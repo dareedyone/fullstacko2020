@@ -24,5 +24,5 @@ try {
 	const [val1, val2] = parseArgs(process.argv);
 	console.log(calculateBmi(val1, val2));
 } catch (exp) {
-	console.log(exp.message);
+	console.log(exp.message); //eslint-disable-line
 }

@@ -15,8 +15,8 @@ const calculateExercises = (
 	const trainingDays = hours.filter((h) => h !== 0).length;
 	const average = hours.reduce((a, b) => a + b) / periodLength;
 	const success = average >= target;
-	let rating;
-	let ratingsDescription;
+	let rating = 0;
+	let ratingsDescription = "none";
 	const diff = target - average;
 
 	if (diff <= 0) {
@@ -61,5 +61,5 @@ try {
 	const [target, ...hours] = parseCalcArgs(process.argv);
 	console.log(calculateExercises(hours, target));
 } catch (exp) {
-	console.log(exp.message);
+	console.log(exp.message); //eslint-disable-line
 }
