@@ -7,7 +7,7 @@ interface calcValues {
 	rating: number;
 	ratingsDescription: string;
 }
-const calculateExercises = (
+export const calculateExercises = (
 	hours: Array<number>,
 	target: number
 ): calcValues => {
