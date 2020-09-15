@@ -1,11 +1,13 @@
-const calculateBmi = (height: number, weight: number): string => {
+export const calculateBmi = (height: number, weight: number): string => {
 	const bmi = weight / ((height / 100) * (height / 100));
 	console.log(bmi);
+	let returnString = "";
+	if (bmi <= 18.5) returnString = "underweight (unhealthy)";
+	if (bmi >= 18.5 && bmi <= 25) returnString = "normal (healthy weight)";
+	if (bmi >= 25 && bmi <= 30) returnString = "overweight (unhealthy)";
+	if (bmi > 30) returnString = "obese (unhealthy)";
 
-	if (bmi <= 18.5) return "underweight (unhealthy)";
-	if (bmi >= 18.5 && bmi <= 25) return "normal (healthy weight)";
-	if (bmi >= 25 && bmi <= 30) return "overweight (unhealthy)";
-	if (bmi > 30) return "obese (unhealthy)";
+	return returnString;
 };
 const parseArgs = (args: Array<string>): Array<number> => {
 	if (args.length < 4) throw new Error("Not enough arguments");
