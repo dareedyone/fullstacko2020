@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import patients from "../../data/patients";
-import { Patient, NonSensitivePatient, NewPatient } from "../types";
+import { Patient, NewPatient, PublicPatient } from "../types";
 import { v1 as uuid } from "uuid";
 const getPatients = (): Patient[] => patients;
-const getNonSensitivePatients = (): NonSensitivePatient[] =>
+const getNonSensitivePatients = (): PublicPatient[] =>
 	patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
 		id,
 		name,
@@ -21,5 +21,8 @@ const addPatient = (patient: NewPatient): Patient => {
 	patients.push(newPatient);
 	return newPatient;
 };
+const getPatient = (id: string): PublicPatient | undefined => {
+	return patients.find((p) => p.id === id);
+};
 
-export default { getPatients, getNonSensitivePatients, addPatient };
+export default { getPatients, getNonSensitivePatients, addPatient, getPatient };
