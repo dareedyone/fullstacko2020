@@ -5,6 +5,7 @@ import { Patient } from "./../types";
 import axios from "axios";
 import { apiBaseUrl } from "./../constants";
 import { Icon } from "semantic-ui-react";
+import { addPatient } from "./../state/reducer";
 
 const PatientPage: React.FC = () => {
 	const [{ patients }, dispatch] = useStateValue();
@@ -22,7 +23,7 @@ const PatientPage: React.FC = () => {
 				const { data: patientFromApi } = await axios.get<Patient>(
 					`${apiBaseUrl}/patients/${id}`
 				);
-				dispatch({ type: "ADD_PATIENT", payload: patientFromApi });
+				dispatch(addPatient(patientFromApi));
 			} catch (e) {
 				console.error(e);
 			}
