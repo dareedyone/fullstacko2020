@@ -1,6 +1,7 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { State } from "./state";
 import { Patient } from "../types";
+import { Diagnosis } from "./../types";
 
 export type Action =
 	| {
@@ -10,10 +11,18 @@ export type Action =
 	| {
 			type: "ADD_PATIENT";
 			payload: Patient;
+	  }
+	| {
+			type: "SET_DIAGNOSIS_LIST";
+			payload: Diagnosis[];
 	  };
 
 export const setPatientList = (pl: Patient[]): Action => {
 	return { type: "SET_PATIENT_LIST", payload: pl };
+};
+
+export const setDiagnosisList = (dl: Diagnosis[]): Action => {
+	return { type: "SET_DIAGNOSIS_LIST", payload: dl };
 };
 
 export const addPatient = (p: Patient): Action => {
@@ -31,6 +40,16 @@ export const reducer = (state: State, action: Action): State => {
 						{}
 					),
 					...state.patients,
+				},
+			};
+		case "SET_DIAGNOSIS_LIST":
+			return {
+				...state,
+				diagnoses: {
+					...action.payload.reduce(
+						(memo, diagnosis) => ({ ...memo, [diagnosis.code]: diagnosis }),
+						{}
+					),
 				},
 			};
 		case "ADD_PATIENT":
