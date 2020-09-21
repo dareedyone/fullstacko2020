@@ -21,7 +21,7 @@ const addPatient = (patient: NewPatient): Patient => {
 	patients.push(newPatient);
 	return newPatient;
 };
-const getPatient = (id: string): PublicPatient | undefined => {
+const getPatient = (id: string): Patient | undefined => {
 	return patients.find((p) => p.id === id);
 };
 

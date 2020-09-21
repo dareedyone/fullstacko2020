@@ -39,6 +39,49 @@ const PatientPage: React.FC = () => {
 			</h1>
 			<p>ssn: {patient?.ssn}</p>
 			<p>occupation: {patient?.occupation}</p>
+			<h2>entries</h2>
+
+			<ul>
+				{patient?.entries.map((e) =>
+					e.type === "Hospital" ? (
+						<li key={e.id}>
+							<p>
+								To be discharged, {e.discharge.date} {e.description}
+							</p>
+							<ul>
+								{e?.diagnosisCodes?.map((dc, i) => (
+									<li key={i}>{dc}</li>
+								))}
+							</ul>
+						</li>
+					) : e.type === "OccupationalHealthcare" ? (
+						<li key={e.id}>
+							<p>
+								{e.sickLeave?.startDate} {e.description}
+							</p>
+							<ul>
+								{e?.diagnosisCodes?.map((dc, i) => (
+									<li key={i}>{dc}</li>
+								))}
+							</ul>
+						</li>
+					) : e.type === "HealthCheck" ? (
+						<li key={e.id}>
+							<p>
+								{" "}
+								Rating: {e.healthCheckRating} {e.description}
+							</p>
+							<ul>
+								{e?.diagnosisCodes?.map((dc, i) => (
+									<li key={i}>{dc}</li>
+								))}
+							</ul>
+						</li>
+					) : (
+						<li>no entries</li>
+					)
+				)}
+			</ul>
 		</>
 	);
 };
