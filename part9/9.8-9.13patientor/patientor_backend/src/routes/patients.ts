@@ -10,6 +10,10 @@ patientRouter.get("/:id", (req, res) => {
 	res.json(patientService.getPatient(req.params.id));
 });
 
+patientRouter.post("/:id/entries", (req, res) => {
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+	res.json(patientService.addPatientEntry(req.body, req.params.id));
+});
 patientRouter.post("/", (req, res) => {
 	const newPatient = toNewPatient(req.body);
 	res.json(patientService.addPatient(newPatient));
