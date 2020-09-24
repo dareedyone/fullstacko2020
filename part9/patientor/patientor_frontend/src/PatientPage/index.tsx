@@ -76,8 +76,8 @@ const PatientPage: React.FC = () => {
 			/>
 
 			<Card.Group>
-				{patient?.entries.map((e) => (
-					<EntryDetails key={e.id} entry={e} />
+				{patient?.entries.map((e, i) => (
+					<EntryDetails key={i} entry={e} />
 				))}
 			</Card.Group>
 		</>
