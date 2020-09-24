@@ -25,7 +25,17 @@ export const HospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
 			onSubmit={onSubmit}
 			validate={(values) => {
 				const requiredError = "Field is required";
-				const errors: { [field: string]: string } = {};
+				// const errors: { [field: string]: string } = {};
+				const errors: {
+					specialist?: string;
+					description?: string;
+					date?: string;
+					diagnosisCodes?: string;
+					discharge?: {
+						criteria?: string;
+						date?: string;
+					};
+				} = {};
 				if (!values.specialist) {
 					errors.specialist = requiredError;
 				}
@@ -38,20 +48,20 @@ export const HospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
 				if (!values.diagnosisCodes) {
 					errors.diagnosisCodes = requiredError;
 				}
+				//to avoid error
+				errors.discharge = {};
 				if (!values.discharge.date) {
 					// errors.discharge = requiredError;
-					errors["discharge.date"] = requiredError;
+					errors.discharge.date = requiredError;
 				}
 				if (!values.discharge.criteria) {
 					// errors.discharge = requiredError;
-					errors["discharge.criteria"] = requiredError;
+					errors.discharge.criteria = requiredError;
 				}
 				return errors;
 			}}
 		>
-			{({ isValid, dirty, setFieldValue, setFieldTouched, errors }) => {
-				console.log(errors);
-
+			{({ isValid, dirty, setFieldValue, setFieldTouched }) => {
 				return (
 					<Form className="form ui">
 						<Field
