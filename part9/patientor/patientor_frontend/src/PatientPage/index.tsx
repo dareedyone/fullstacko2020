@@ -9,6 +9,7 @@ import EntryDetails from "../components/EntryDetails";
 import { Patient } from "./../types";
 import {
 	EntryFormValues,
+	HealthCheckEntryModal,
 	HospitalEntryModal,
 	OccupationalEntryModal,
 } from "../AddEntryModal";
@@ -32,10 +33,15 @@ const PatientPage: React.FC = () => {
 		boolean
 	>(false);
 	const openOccupationalModal = (): void => setOccupationalModalOpen(true);
+	const [healthCheckModalOpen, setHealthCheckModalOpen] = React.useState<
+		boolean
+	>(false);
+	const openHealthCheckModal = (): void => setHealthCheckModalOpen(true);
 
 	const closeModal = (): void => {
 		setHospitalModalOpen(false);
 		setOccupationalModalOpen(false);
+		setHealthCheckModalOpen(false);
 		setError(undefined);
 	};
 	useEffect(() => {
@@ -81,6 +87,9 @@ const PatientPage: React.FC = () => {
 			<Button onClick={() => openOccupationalModal()}>
 				Add New Occupational Entry
 			</Button>
+			<Button onClick={() => openHealthCheckModal()}>
+				Add New Health Check Entry
+			</Button>
 			<HospitalEntryModal
 				modalOpen={hospitalModalOpen}
 				onSubmit={submitNewEntry}
@@ -89,6 +98,12 @@ const PatientPage: React.FC = () => {
 			/>
 			<OccupationalEntryModal
 				modalOpen={occupationalModalOpen}
+				onSubmit={submitNewEntry}
+				error={error}
+				onClose={closeModal}
+			/>
+			<HealthCheckEntryModal
+				modalOpen={healthCheckModalOpen}
 				onSubmit={submitNewEntry}
 				error={error}
 				onClose={closeModal}
